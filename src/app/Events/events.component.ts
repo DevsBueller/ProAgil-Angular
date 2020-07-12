@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-
+import { Component, OnInit, TemplateRef } from '@angular/core';
+import { EventService } from '../_services/event.service';
+import { Event } from '../_models/Event';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-events',
@@ -8,16 +9,55 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./events.component.css'],
 })
 export class EventsComponent implements OnInit {
-  events: any;
-  constructor(private http: HttpClient) {}
+  filtredEvents: Event[];
+  events: Event[];
+  imgWidth = 50;
+  imgMargin = 2;
+  showImage = false;
+  modalRef: BsModalRef;
 
-  ngOnInit(): void {
+  constructor(
+    private eventService: EventService,
+    private modalService: BsModalService
+  ) {}
+
+  _listFilter: string;
+
+  get listFilter(): string {
+    return this._listFilter;
+  }
+  set listFilter(value: string) {
+    this._listFilter = value;
+    this.filtredEvents = this.listFilter
+      ? this.filterEvents(this.listFilter)
+      : this.events;
+  }
+  openModal(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template);
+  }
+
+  ngOnInit() {
     this.getEvents();
   }
-  getEvents(){
-    this.events = this.http.get('http://localhost:5000/api/values').subscribe(
-      response => {this.events = response; console.log(response)}, 
-      error =>{console.log(error);}
-      );
+  ChangeImage() {
+    this.showImage = !this.showImage;
+  }
+  filterEvents(filterBy: string): Event[] {
+    filterBy = filterBy.toLocaleLowerCase();
+    return this.events.filter(
+      (event) => event.theme.toLocaleLowerCase().indexOf(filterBy) !== -1
+    );
+  }
+  getEvents() {
+    this.eventService.getAllEvents().subscribe(
+      (_events: Event[]) => {
+        this.events = _events;
+        this.filtredEvents = this.events;
+        console.log(_events);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
 }
