@@ -1,3 +1,4 @@
+<app-title [titlePag]="title"></app-title>
 <div class="d-flex">
   <div class="form-inline mr-auto" action="">
     <div class="form-group mb-2">
@@ -47,7 +48,7 @@
       </td>
       <td>{{ event.theme }}</td>
       <td>{{ event.local }}</td>
-      <td>{{ event.eventDate | datetimeformatpipe }}</td>
+      <td>{{ event.eventDate | date: 'dd/MM/yyyy' }}</td>
       <td>{{ event.qtPeoples }}</td>
       <td>
         <div *ngIf="!event.lots.length">
@@ -330,7 +331,7 @@
       			<button type="button" class="btn btn-outline-primary" (click)="confirm.hide()">
         			CANCELAR
       			</button>
-      			<button type="button" class="btn btn-outline-danger" (click)="deleteEvent(event.id)">
+      			<button type="button" class="btn btn-outline-danger" (click)="deleteEvent(confirm)">
           			DELETAR
         		</button>
     		</div>

@@ -11,11 +11,19 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 import { EventsComponent } from './events/events.component';
+import { SpeakersComponent } from './speakers/speakers.component';
+import { ContactsComponent } from './contacts/contacts.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { DatetimeformatpipePipe } from './_helps/datetimeformatpipe.pipe';
 import { NavComponent } from './nav/nav/nav.component';
 import {EventService} from './_services/event.service';
-import { DatetimeformatpipePipe } from './_helps/datetimeformatpipe.pipe';
 import localePt from '@angular/common/locales/pt';
 import { registerLocaleData } from '@angular/common';
+import { ToastrModule } from 'ngx-toastr';
+
+import { TitleComponent } from './_shared/title/title.component';
+
+
 
 
 registerLocaleData(localePt);
@@ -25,6 +33,10 @@ registerLocaleData(localePt);
     EventsComponent,
     NavComponent,
     DatetimeformatpipePipe,
+    SpeakersComponent,
+    ContactsComponent,
+    DashboardComponent,
+    TitleComponent,
   ],
   imports: [
     BrowserModule,
@@ -34,6 +46,11 @@ registerLocaleData(localePt);
     AccordionModule.forRoot(),
     TooltipModule.forRoot(),
     ModalModule.forRoot(),
+    ToastrModule.forRoot({
+      timeOut: 10000,
+      positionClass: 'toast-bottom-right',
+      preventDuplicates: true,
+    }),
     AppRoutingModule,
     HttpClientModule,
     FormsModule,

@@ -8,13 +8,14 @@ import {
   Validators,
   FormBuilder,
 } from '@angular/forms';
-
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-events',
   templateUrl: './events.component.html',
   styleUrls: ['./events.component.css'],
 })
 export class EventsComponent implements OnInit {
+  title = 'Eventos';
   filtredEvents: Event[];
   events: Event[];
   event: Event;
@@ -29,7 +30,8 @@ export class EventsComponent implements OnInit {
   constructor(
     private eventService: EventService,
     private modalService: BsModalService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private toastr: ToastrService
   ) {}
 
   _listFilter: string;
@@ -47,14 +49,14 @@ export class EventsComponent implements OnInit {
     this.registerForm.reset();
     template.show();
   }
-  editEvent( event: Event, template: any) {
+  editEvent(event: Event, template: any) {
     this.modoSave = 'put';
     this.openModal(template);
     this.event = event;
     this.registerForm.patchValue(event);
   }
   newEvent(template: any) {
-    this.modoSave = "post";
+    this.modoSave = 'post';
     this.openModal(template);
   }
 
@@ -87,44 +89,53 @@ export class EventsComponent implements OnInit {
   confirmDelete(confirm: any, event: Event) {
     this.openModal(confirm);
     this.event = event;
-    this.deleteMessage =
-      `Tem certeza que deseja excluir o evento: ${event.theme}`;
+    this.deleteMessage = `Tem certeza que deseja excluir o evento: ${event.theme}`;
   }
   deleteEvent(confirm: any) {
     this.eventService.deleteEvent(this.event.id).subscribe(
       (newEvent: Event) => {
+        confirm.hide();
         console.log(newEvent);
+        this.toastr.success('Deletado com Sucesso');
         this.getEvents();
       },
       (error) => {
         console.log(error);
+        this.toastr.error('Erro ao tentar Deletar');
       }
     );
   }
   saveChanges(template: any) {
     if (this.registerForm.valid) {
-      if (this.modoSave === "post") {
+      if (this.modoSave === 'post') {
         this.event = Object.assign({}, this.registerForm.value);
         this.eventService.postEvent(this.event).subscribe(
           (newEvent: Event) => {
             console.log(newEvent);
             template.hide();
             this.getEvents();
+            this.toastr.success('Inserido com Sucesso');
           },
           (error) => {
             console.log(error);
+            this.toastr.error('Erro ao tentar inserir: `${error}`');
           }
         );
       } else {
-        this.event = Object.assign(this.event.id ? { id: this.event.id } : {}, this.registerForm.value);
+        this.event = Object.assign(
+          this.event.id ? { id: this.event.id } : {},
+          this.registerForm.value
+        );
         this.eventService.putEvent(this.event).subscribe(
           (editedEvent: Event) => {
             console.log(editedEvent);
             template.hide();
             this.getEvents();
+            this.toastr.success('Alterado com Sucesso');
           },
           (error) => {
             console.log(error);
+            this.toastr.error('Erro ao tentar alterar: `${error}`');
           }
         );
       }
@@ -144,7 +155,7 @@ export class EventsComponent implements OnInit {
         console.log(_events);
       },
       (error) => {
-        console.log(error);
+        this.toastr.error(`Error ao obter eventos ${error}`);
       }
     );
   }
