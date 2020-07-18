@@ -24,6 +24,9 @@ export class EventsComponent implements OnInit {
   showImage = false;
   deleteMessage: string;
   modoSave: string;
+  file: File;
+  fileNameToUpdate: string;
+  currentDate: string;
 
   registerForm: FormGroup;
 
@@ -52,8 +55,10 @@ export class EventsComponent implements OnInit {
   editEvent(event: Event, template: any) {
     this.modoSave = 'put';
     this.openModal(template);
-    this.event = event;
-    this.registerForm.patchValue(event);
+    this.event = Object.assign({}, event);
+    this.fileNameToUpdate = event.imagemUrl.toString();
+    this.event.imagemUrl = '';
+    this.registerForm.patchValue(this.event);
   }
   newEvent(template: any) {
     this.modoSave = 'post';
@@ -105,10 +110,31 @@ export class EventsComponent implements OnInit {
       }
     );
   }
+  uploadImage() {
+    if(this.modoSave === 'post'){
+      const fileName = this.event.imagemUrl.split('\\', 3);
+      this.event.imagemUrl = fileName[2];
+      this.eventService.postUpload(this.file, this.event.imagemUrl).subscribe(
+        () => {this.currentDate = new Date().getMilliseconds().toString();
+        this.getEvents();
+        }
+      );
+    }
+    else{
+      this.event.imagemUrl = this.fileNameToUpdate;
+      this.eventService.postUpload(this.file, this.fileNameToUpdate).subscribe(
+        () =>{  this.currentDate = new Date().getMilliseconds().toString();
+        this.getEvents();
+      }
+      );
+    }
+
+  }
   saveChanges(template: any) {
     if (this.registerForm.valid) {
       if (this.modoSave === 'post') {
         this.event = Object.assign({}, this.registerForm.value);
+        this.uploadImage();
         this.eventService.postEvent(this.event).subscribe(
           (newEvent: Event) => {
             console.log(newEvent);
@@ -126,6 +152,8 @@ export class EventsComponent implements OnInit {
           this.event.id ? { id: this.event.id } : {},
           this.registerForm.value
         );
+
+        this.uploadImage();
         this.eventService.putEvent(this.event).subscribe(
           (editedEvent: Event) => {
             console.log(editedEvent);
@@ -139,6 +167,13 @@ export class EventsComponent implements OnInit {
           }
         );
       }
+    }
+  }
+  onFileChange(event) {
+    const reader = new FileReader();
+    if (event.target.files && event.target.files.length) {
+      this.file = event.target.files;
+      console.log(this.file);
     }
   }
   filterEvents(filterBy: string): Event[] {
