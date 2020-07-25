@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
@@ -22,6 +22,10 @@ import { registerLocaleData } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
 
 import { TitleComponent } from './_shared/title/title.component';
+import { UserComponent } from './user/user.component';
+import { LoginComponent } from './user/login/login.component';
+import { RegistrationComponent } from './user/registration/registration.component';
+import { AuthInterceptor } from './auth/auth.interceptor';
 
 
 
@@ -32,11 +36,14 @@ registerLocaleData(localePt);
     AppComponent,
     EventsComponent,
     NavComponent,
-    DatetimeformatpipePipe,
     SpeakersComponent,
     ContactsComponent,
     DashboardComponent,
     TitleComponent,
+    UserComponent,
+    LoginComponent,
+    RegistrationComponent,
+    DatetimeformatpipePipe
   ],
   imports: [
     BrowserModule,
@@ -56,7 +63,14 @@ registerLocaleData(localePt);
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [EventService],
+  providers: [
+    EventService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -111,24 +111,24 @@ export class EventsComponent implements OnInit {
     );
   }
   uploadImage() {
-    if(this.modoSave === 'post'){
+    if (this.modoSave === 'post') {
       const fileName = this.event.imagemUrl.split('\\', 3);
       this.event.imagemUrl = fileName[2];
-      this.eventService.postUpload(this.file, this.event.imagemUrl).subscribe(
-        () => {this.currentDate = new Date().getMilliseconds().toString();
-        this.getEvents();
-        }
-      );
-    }
-    else{
+      this.eventService
+        .postUpload(this.file, this.event.imagemUrl)
+        .subscribe(() => {
+          this.currentDate = new Date().getMilliseconds().toString();
+          this.getEvents();
+        });
+    } else {
       this.event.imagemUrl = this.fileNameToUpdate;
-      this.eventService.postUpload(this.file, this.fileNameToUpdate).subscribe(
-        () =>{  this.currentDate = new Date().getMilliseconds().toString();
-        this.getEvents();
-      }
-      );
+      this.eventService
+        .postUpload(this.file, this.fileNameToUpdate)
+        .subscribe(() => {
+          this.currentDate = new Date().getMilliseconds().toString();
+          this.getEvents();
+        });
     }
-
   }
   saveChanges(template: any) {
     if (this.registerForm.valid) {

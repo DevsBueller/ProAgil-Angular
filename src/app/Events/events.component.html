@@ -40,7 +40,7 @@
       <td>{{ event.id }}</td>
       <td>
         <img
-          src="http://localhost:5000/resources/images/{{ event.imagemUrl}}?_ts={{currentDate}}"
+          src="http://localhost:5000/resources/images/{{event.imagemUrl}}?_ts={{currentDate}}"
           [style.width.px]="imgWidth"
           [style.margin.px]="imgMargin"
           *ngIf="showImage"
