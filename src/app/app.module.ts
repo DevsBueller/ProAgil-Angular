@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { ModalModule } from 'ngx-bootstrap/modal';
@@ -20,12 +21,13 @@ import {EventService} from './_services/event.service';
 import localePt from '@angular/common/locales/pt';
 import { registerLocaleData } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
-
+import { NgxMaskModule } from 'ngx-mask';
 import { TitleComponent } from './_shared/title/title.component';
 import { UserComponent } from './user/user.component';
 import { LoginComponent } from './user/login/login.component';
 import { RegistrationComponent } from './user/registration/registration.component';
 import { AuthInterceptor } from './auth/auth.interceptor';
+import { EventEditComponent } from './events/event-edit/event-edit.component';
 
 
 
@@ -43,7 +45,8 @@ registerLocaleData(localePt);
     UserComponent,
     LoginComponent,
     RegistrationComponent,
-    DatetimeformatpipePipe
+    DatetimeformatpipePipe,
+    EventEditComponent
   ],
   imports: [
     BrowserModule,
@@ -51,6 +54,8 @@ registerLocaleData(localePt);
     BsDropdownModule.forRoot(),
     BsDatepickerModule.forRoot(),
     AccordionModule.forRoot(),
+    TabsModule.forRoot(),
+    NgxMaskModule.forRoot(),
     TooltipModule.forRoot(),
     ModalModule.forRoot(),
     ToastrModule.forRoot({

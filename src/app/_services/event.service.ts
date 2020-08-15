@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Event } from '../_models/Event';
+import { EventModel } from '../_models/event-model';
 import { eventNames } from 'process';
 
 @Injectable({
@@ -12,14 +12,14 @@ export class EventService {
 
   constructor(private http: HttpClient) {}
 
-  getAllEvents(): Observable<Event[]> {
-    return this.http.get<Event[]>(this.baseURL);
+  getAllEvents(): Observable<EventModel[]> {
+    return this.http.get<EventModel[]>(this.baseURL);
   }
-  getEventsByTheme(theme: string): Observable<Event[]> {
-    return this.http.get<Event[]>(`${this.baseURL}/getByTheme/${theme}`);
+  getEventsByTheme(theme: string): Observable<EventModel[]> {
+    return this.http.get<EventModel[]>(`${this.baseURL}/getByTheme/${theme}`);
   }
-  getEventById(id: number): Observable<Event> {
-    return this.http.get<Event>(`${this.baseURL}/${id}`);
+  getEventById(id: number): Observable<EventModel> {
+    return this.http.get<EventModel>(`${this.baseURL}/${id}`);
   }
   postUpload(file: File, fileName: string) {
     const fileToUpload = <File>file[0];
@@ -28,10 +28,10 @@ export class EventService {
 
     return this.http.post(`${this.baseURL}/upload`, formData);
   }
-  postEvent(event: Event) {
+  postEvent(event: EventModel) {
     return this.http.post(this.baseURL, event);
   }
-  putEvent(event: Event) {
+  putEvent(event: EventModel) {
     return this.http.put(`${this.baseURL}/${event.id}`, event);
   }
   deleteEvent(id: number) {

@@ -8,21 +8,22 @@ import { UserComponent } from './user/user.component';
 import { RegistrationComponent } from './user/registration/registration.component';
 import { LoginComponent } from './user/login/login.component';
 import { AuthGuard } from './auth/auth.guard';
+import { EventEditComponent } from './events/event-edit/event-edit.component';
 
 const routes: Routes = [
   {
-    path: 'user',
-    component: UserComponent,
+    path: 'user', component: UserComponent,
     children: [
       { path: 'login', component: LoginComponent },
       { path: 'registration', component: RegistrationComponent },
     ],
   },
   { path: 'events', component: EventsComponent, canActivate: [AuthGuard] },
+  { path: 'event/:id/edit', component: EventEditComponent, canActivate: [AuthGuard] },
   { path: 'speakers', component: SpeakersComponent, canActivate: [AuthGuard] },
-  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard],
-  },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
   { path: 'contacts', component: ContactsComponent, canActivate: [AuthGuard] },
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: '**', redirectTo: 'dashboard', pathMatch: 'full' },
 ];
 

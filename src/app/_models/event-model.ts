@@ -1,7 +1,9 @@
-import {Lot} from './Lot';
-import {SocialNetwork} from './SocialNetwork';
-import {Speaker} from './Speaker';
-export interface Event {
+import {Lot} from './lot';
+import {SocialNetwork} from './social-network';
+import {Speaker} from './speaker';
+export class EventModel {
+  constructor() { }
+
   id: number;
   local: string;
   eventDate: Date;

@@ -32,7 +32,7 @@
       <th>Data</th>
       <th>Qtd Pessoas</th>
       <th>Lote</th>
-      <th>Opções</th>
+      <th colspan="2" class="text-center">Opções</th>
     </tr>
   </thead>
   <tbody *ngIf="events.length">
@@ -61,18 +61,22 @@
       <td>
         <div cllass="btn-group">
           <button
-            class="btn btn-outline-primary mr-2"
+            class="btn btn-sm btn-outline-primary mr-2"
             tooltip="editar"
             (click)="editEvent(event, template)"
           >
             <i class="fa fa-edit"></i>
           </button>
           <button
-           class="btn btn-outline-danger"
+           class="btn btn-sm btn-outline-danger"
            (click)="confirmDelete(confirm, event)">
             <i class="fa fa-eraser" tooltip></i>
           </button>
         </div>
+      </td>
+      <td>
+        <a [routerLink]="['/event', event.id, 'edit']" tooltip="Edição Detalhada" class="btn btn-sm btn-outline-warning"> <i class="fa fa-edit"></i></a>
+       
       </td>
     </tr>
   </tbody>

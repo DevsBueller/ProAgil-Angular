@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { EventService } from '../_services/event.service';
-import { Event } from '../_models/Event';
+import { EventModel } from '../_models/event-model';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import {
   FormGroup,
@@ -16,9 +16,9 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class EventsComponent implements OnInit {
   title = 'Eventos';
-  filtredEvents: Event[];
-  events: Event[];
-  event: Event;
+  filtredEvents: EventModel[];
+  events: EventModel[];
+  event: EventModel;
   imgWidth = 50;
   imgMargin = 2;
   showImage = false;
@@ -52,7 +52,7 @@ export class EventsComponent implements OnInit {
     this.registerForm.reset();
     template.show();
   }
-  editEvent(event: Event, template: any) {
+  editEvent(event: EventModel, template: any) {
     this.modoSave = 'put';
     this.openModal(template);
     this.event = Object.assign({}, event);
@@ -91,7 +91,7 @@ export class EventsComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
     });
   }
-  confirmDelete(confirm: any, event: Event) {
+  confirmDelete(confirm: any, event: EventModel) {
     this.openModal(confirm);
     this.event = event;
     this.deleteMessage = `Tem certeza que deseja excluir o evento: ${event.theme}`;
@@ -176,7 +176,7 @@ export class EventsComponent implements OnInit {
       console.log(this.file);
     }
   }
-  filterEvents(filterBy: string): Event[] {
+  filterEvents(filterBy: string): EventModel[] {
     filterBy = filterBy.toLocaleLowerCase();
     return this.events.filter(
       (event) => event.theme.toLocaleLowerCase().indexOf(filterBy) !== -1
@@ -184,7 +184,7 @@ export class EventsComponent implements OnInit {
   }
   getEvents() {
     this.eventService.getAllEvents().subscribe(
-      (_events: Event[]) => {
+      (_events: EventModel[]) => {
         this.events = _events;
         this.filtredEvents = this.events;
         console.log(_events);
