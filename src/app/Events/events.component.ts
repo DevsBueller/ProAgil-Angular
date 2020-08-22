@@ -183,6 +183,8 @@ export class EventsComponent implements OnInit {
     );
   }
   getEvents() {
+    this.currentDate = new Date().getMilliseconds().toString();
+
     this.eventService.getAllEvents().subscribe(
       (_events: EventModel[]) => {
         this.events = _events;

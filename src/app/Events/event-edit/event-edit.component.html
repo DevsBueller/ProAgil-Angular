@@ -88,23 +88,92 @@
         </tab>
         <tab heading="Lotes">
           <div>
-            <div >
-              <fieldset class="form-group">
-               
+            <div formGroupName="lots" *ngFor="let lot of lots.controls; let i=index">
+              <fieldset [formGroupName]="i" class="form-group">
+                <legend class="d-flex justify-content-between capitalize">
+                  {{lots.get(i+'.name').value ==''? 'Lotes': lots.get(i+'.name').value}}
+                  <button (click)="removeLot(i)" class="btn btn-sm btn-warning mb-1">remove</button>
+                </legend>
+                <div class="row">
+                  <div class="form-group col-md-4">
+                    <label>Nome</label>
+                    <input               
+                    type="text" class="form-control" formControlName="name"
+                    [ngClass]="{'is-invalid': lots.get(i+'.name').errors && lots.get(i+'.name').touched}"
+                    placeholder="Lote">
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label>Quantidade</label>
+                    <input type="number" class="form-control"
+                    [ngClass]="{'is-invalid': lots.get(i+'.quantity').errors && lots.get(i+'.quantity').touched}"
+                    formControlName="quantity" placeholder="000">
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label>Preço</label>
+                    <input type="text" 
+                    currencyMask [options]="{prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left'}"
+                    class="form-control"
+                    [ngClass]="{'is-invalid': lots.get(i+'.price').errors && lots.get(i+'.price').touched}"
+                    formControlName="price" placeholder="R$ 0,00">
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label>Data Início</label>
+                    <input type="text" class="form-control"    formControlName="beginDate"  placeholder="01/01/2019">
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label>Data Fim</label>
+                    <input type="text" class="form-control" formControlName="finalDate"    placeholder="01/01/2019">
+                  </div>
+                  
+                </div>
               </fieldset>
             </div>
-            <button class="btn btn-outline-primary">
+            <button (click)="addLots()" class="btn btn-outline-primary">
               Adicionar Lote
             </button>
           </div>
         </tab>
         <tab heading="Redes Sociais">
-          <div>
-            <fieldset class="form-group">
-             
+          <div formArrayName="socialNetworks" *ngFor="let socialNetwork of socialNetworks.controls; let j=index">
+            <fieldset [formGroupName]="j" class="form-group">
+              <legend class="d-flex justify-content-between capitalize">
+                {{ socialNetworks.get(j+'.name').value == '' ?
+                    'Redes Sociais' :
+                    socialNetworks.get(j+'.name').value?.replace('fab fa-', '')
+                  }}
+                <button class="btn btn-sm btn-warning mb-1" (click)="removeSocialNetwork(j)">remove</button>
+              </legend>
+              <div class="row">
+                <div class="form-group col-md-4">
+                  <label>Nome</label>
+                  <select class="form-control"
+                  [ngClass]="{'is-invalid': socialNetworks.get(j+'.name').errors && socialNetworks.get(j+'.name').touched}"
+                  formControlName="name">
+                    <option value="">Selecione</option>
+                    <option value="fab fa-youtube">Youtube</option>
+                    <option value="fab fa-instagram">Instagram</option>
+                    <option value="fab fa-facebook">Facebook</option>
+                    <option value="fab fa-twitter">Twitter</option>
+                    <option value="fab fa-google">Google</option>
+                    <option value="fab fa-linkedin">Linkedin</option>
+                    <option value="fab fa-pinterest">Pinterest</option>
+                    <option value="fab fa-whatsapp">Whatsapp</option>
+                    <option value="fab fa-telegram">Telegram</option>
+                    <option value="fab fa-skype">Skype</option>
+                    <option value="fab fa-vimeo">Vimeo</option>
+
+                  </select>
+                </div>
+                <div class="form-group col-md-8">
+                  <label>Link</label>
+                  <input type="text" prefix="http://" mask=""
+                  [ngClass]="{'is-invalid': socialNetworks.get(j+'.url').errors && socialNetworks.get(j+'.url').touched}"
+                  formControlName="url" class="form-control" placeholder="URL">
+                </div>
+              </div>
             </fieldset>
           </div>
-          <button class="btn btn-outline-primary">
+          <button (click)="addSocialNetwork()" class="btn btn-outline-primary">
             Adicionar Rede Social
           </button>
         </tab>
@@ -112,7 +181,9 @@
       <div class="row">
         <div class="col-md-12 d-flex justify-content-end">
           <!-- {{registerForm.value | json}} -->
-          <button [disabled]="!registerForm.valid" class="btn btn-success my-2" >Salvar
+          <button [disabled]="!registerForm.valid" class="btn btn-success my-2"
+          (click)="saveEvent()"
+          >Salvar
             Alterações</button>
         </div>
       </div>
@@ -120,13 +191,13 @@
     <div class="col-md-4">
       <div class="form-row">
         <div class="form-group col-md-9">
-          <input type="file" #file (change)="onFileChange($event, $event.targert.files)" class="form-control is-invalid"
+          <input type="file" #file (change)="onFileChange($event, $event.target.files)" class="form-control is-invalid"
             formControlName="imagemUrl" placeholder="" style="display: none">
         </div>
       </div>
       <div class="card profile-card-2">
         <div class="card-img-block">
-          <img [src]="event.imagemUrl" class="img-fluid" (click)="file.click()" style="cursor: pointer; width: 350px;"
+          <img [src]="imageUrl" class="img-fluid" (click)="file.click()" style="cursor: pointer; width: 350px;"
             alt="Card image cap" />
         </div>
         <div class="card-body pt-3">
@@ -149,9 +220,10 @@
           </p>
           <div class="row">
             <div class="icon-block col-md-8 iconesSociais">
-              <a class="mr-3"
+              <a href="{{socialNetworks.get(l+'.url').value}}"
+               *ngFor="let socialNetwork of socialNetworks.controls let l=index;"class="mr-3"
                 target="_blank">
-                <i class="fab fa-youtube"></i>
+                <i class="{{socialNetworks.get(l+'.name').value}}"></i>
               </a>
             </div>
             <!--div class="col-md-4 d-flex justify-content-center">  

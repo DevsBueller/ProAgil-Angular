@@ -28,7 +28,7 @@ import { LoginComponent } from './user/login/login.component';
 import { RegistrationComponent } from './user/registration/registration.component';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { EventEditComponent } from './events/event-edit/event-edit.component';
-
+import { NgxCurrencyModule } from 'ngx-currency';
 
 
 
@@ -56,6 +56,7 @@ registerLocaleData(localePt);
     AccordionModule.forRoot(),
     TabsModule.forRoot(),
     NgxMaskModule.forRoot(),
+    NgxCurrencyModule,
     TooltipModule.forRoot(),
     ModalModule.forRoot(),
     ToastrModule.forRoot({

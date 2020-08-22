@@ -1,4 +1,4 @@
-import {Lot} from './lot';
+import{Lot} from './lot'
 import {SocialNetwork} from './social-network';
 import {Speaker} from './speaker';
 export class EventModel {

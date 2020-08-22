@@ -1,9 +1,9 @@
 export class Lot {
     id: number;
     name: string;
-    Price: number;
+    price: number;
     beginDate?: Date;
-    finalDate: Date;
+    finalDate?: Date;
     quantity: number;
     eventId: number; 
 }

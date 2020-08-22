@@ -1,7 +1,7 @@
 export class SocialNetwork {
     Id: number;
     Name: string;
-    URL: string;
+    url: string;
     EventId?: number;
     SpeakerId?: number;
 }
